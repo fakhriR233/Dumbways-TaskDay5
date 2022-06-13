@@ -5,11 +5,48 @@ let postProject = [];
 
 function projectSubmit(){
     let name = document.getElementById("input-project").value;
-    let startDate = document.getElementById("input-start-date").value;
-    let endDate= document.getElementById("input-end-date").value;
+    let startDate = new Date(document.getElementById("input-start-date").value);
+    let endDate= new Date(document.getElementById("input-end-date").value);
     let desc = document.getElementById("input-desc").value;
     let projectCheckbox = document.querySelectorAll('input[name="checkall"]:checked');
     let image = document.getElementById("input-upload-image").files;
+
+//Timeline Mulai dan Akhir
+    let timeLine;
+    
+    if (startDate < endDate) {
+        timeLine = new Date(endDate - startDate)
+    } else {
+        timeLine = new Date(startDate - endDate)
+    }
+
+    // let years = (timeLine.getFullYear()-1970);
+    // let month = timeLine.getMonth();
+    // let days = timeLine.getDay();
+
+    // if (timeLine / (1000*3600*24) < 0) {
+    //     return alert("Waktu Selesai project tidak bisa sebelum dari waktu mulai project!")
+    // } else {
+    //     timeLine = timeLine
+    // }
+
+    let distance = Math.floor(timeLine / (1000 * 3600 * 24))
+    let distanceMonth = Math.floor(distance/30)
+    //let extraDays = distance % (30*distanceMonth)
+    let distanceYears = Math.floor(distanceMonth/12)
+
+    console.log(distance);
+
+//menghitung timeline project
+    if (distance < 30) {
+        timeLine = "Dibawah 1 Bulan"
+    } else if ( distance >= 30 && distance < 365 ) {
+        timeLine = `${distanceMonth} Bulan`
+    } else {
+        timeLine = `sekitar ${distanceYears} Tahun`
+    }
+
+    console.log(timeLine);
 
     var ceklis = "";
     for(var i = 0; i < projectCheckbox.length; i++){
@@ -51,7 +88,8 @@ function projectSubmit(){
         endDate: endDate,
         desc: desc,
         projectCheckbox: ceklis,
-        image: image
+        image: image,
+        timeLine: timeLine
     }
 
     //console.log(fullValue);
@@ -73,7 +111,7 @@ function innerRender() {
         <a href="#" style="text-decoration: none; color: black"><img src="${data.image}" alt=""></a>
         <div class="project-title">
             <h2>${data.name}</h2>
-            <p>Durasi : X bulan</p>
+            <p>Durasi : ${data.timeLine}</p>
         </div>
             <div class="project-desc">
             <p>${data.desc}</p>
